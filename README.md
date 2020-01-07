@@ -1,6 +1,6 @@
 # kalimati_price
 
-A new Flutter project.
+Get the app from playstore. 
 
 ## Screenshots
 
