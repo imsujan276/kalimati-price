@@ -4,4 +4,4 @@ A new Flutter project.
 
 ## Screenshots
 
-![Screenshot](one.png)
+![Screenshot](screenshots/one.png)
