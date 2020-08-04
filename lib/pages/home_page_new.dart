@@ -14,7 +14,6 @@ class HomePageNew extends StatefulWidget {
 
 class _HomePageNewState extends State<HomePageNew> {
   static const bannerAdID = "ca-app-pub-9000154121468885/3888822435";
-  final nativeAdMob = NativeAdmob();
 
   bool isLoading = true;
   bool hasError = false;
@@ -23,7 +22,6 @@ class _HomePageNewState extends State<HomePageNew> {
   @override
   void initState() {
     super.initState();
-    nativeAdMob.initialize(appID: "ca-app-pub-9000154121468885~7244024653");
   }
 
   final Completer<WebViewController> _controller =
@@ -45,56 +43,64 @@ class _HomePageNewState extends State<HomePageNew> {
         ],
       ),
       body: Builder(builder: (BuildContext context) {
-        return Stack(
-          children: <Widget>[
-            NativeAdmobBannerView(
+        return Column(
+          children: [
+            NativeAdmob(
+              // Your ad unit id
               adUnitID: bannerAdID,
-              style: BannerStyle.light, // enum dark or light
-              showMedia: true, // whether to show media view or not
+              type: NativeAdmobType.full,
             ),
-            WebView(
-              initialUrl: url,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller.complete(webViewController);
-              },
-              onPageStarted: (String url) {
-                print('Page started loading: $url');
-              },
-              onPageFinished: (String url) {
-                if (!hasError) {
-                  setState(() {
-                    isLoading = false;
-                  });
-                }
-              },
-              onWebResourceError: (WebResourceError error) {
-                print(error);
-                setState(() {
-                  isLoading = false;
-                  hasError = true;
-                });
-              },
-              gestureNavigationEnabled: true,
-            ),
-            isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : hasError
-                    ? Container(
-                        color: Colors.grey,
-                        child: Center(
-                          child: RaisedButton(
-                            onPressed: () => SystemNavigator.pop(),
-                            child: Text(
-                              'No Internet Connection',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: Colors.redAccent,
-                          ),
-                        ))
-                    : Container(),
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    child: WebView(
+                      initialUrl: url,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onWebViewCreated: (WebViewController webViewController) {
+                        _controller.complete(webViewController);
+                      },
+                      onPageStarted: (String url) {
+                        print('Page started loading: $url');
+                      },
+                      onPageFinished: (String url) {
+                        if (!hasError) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      },
+                      onWebResourceError: (WebResourceError error) {
+                        print(error);
+                        setState(() {
+                          isLoading = false;
+                          hasError = true;
+                        });
+                      },
+                      gestureNavigationEnabled: true,
+                    ),
+                  ),
+                  isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : hasError
+                          ? Container(
+                              color: Colors.grey,
+                              child: Center(
+                                child: RaisedButton(
+                                  onPressed: () => SystemNavigator.pop(),
+                                  child: Text(
+                                    'No Internet Connection',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  color: Colors.redAccent,
+                                ),
+                              ))
+                          : Container(),
+                ],
+              ),
+            )
           ],
         );
       }),

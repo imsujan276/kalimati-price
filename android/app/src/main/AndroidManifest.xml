@@ -10,6 +10,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Kalimati Price"
         android:icon="@mipmap/launcher_icon">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9000154121468885~7244024653"/>
 
         <activity
             android:name=".MainActivity"

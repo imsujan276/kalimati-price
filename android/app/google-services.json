@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "554096139820",
+    "firebase_url": "https://rps-game-276.firebaseio.com",
+    "project_id": "rps-game-276",
+    "storage_bucket": "rps-game-276.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554096139820:android:68f80bd89495066ca13b89",
+        "android_client_info": {
+          "package_name": "com.suga.kalimati_price"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554096139820-1lqvodb1vu5p6363dkglcepqv4if5odj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4mc3wN6h-33nTXGk5a4WhGEddWaehhh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554096139820-1lqvodb1vu5p6363dkglcepqv4if5odj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9000154121468885~7244024653"
+    }
+  ],
+  "configuration_version": "1"
+}
