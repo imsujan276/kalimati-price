@@ -1,31 +1,22 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:webview_flutter/platform_interface.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:kalimati_price/pages/english_web_view.dart';
+import 'package:kalimati_price/pages/nepali_page.dart';
 import 'package:rounded_modal/rounded_modal.dart';
-
-import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:tabbar/tabbar.dart';
 
 class HomePageNew extends StatefulWidget {
   @override
   _HomePageNewState createState() => _HomePageNewState();
 }
 
-class _HomePageNewState extends State<HomePageNew> {
-  static const bannerAdID = "ca-app-pub-9000154121468885/3888822435";
-
-  bool isLoading = true;
-  bool hasError = false;
-  var url = "https://nepalicalendar.rat32.com/vegetable/embed.php";
+class _HomePageNewState extends State<HomePageNew>
+    with SingleTickerProviderStateMixin {
+  final controller = PageController();
 
   @override
   void initState() {
     super.initState();
   }
-
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +24,42 @@ class _HomePageNewState extends State<HomePageNew> {
       appBar: AppBar(
         title: Text("Kalimati Price Today"),
         elevation: 0.0,
+        backgroundColor: Color.fromRGBO(0, 54, 140, 1),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(40.0),
+          child: TabbarHeader(
+            controller: controller,
+            backgroundColor: Color.fromRGBO(0, 54, 140, 1),
+            indicatorColor: Colors.red,
+            foregroundColor: Colors.white70,
+            tabs: [
+              Tab(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Text(
+                      'दैनिक थोक मूल्य',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ),
+                ),
+              ),
+              Tab(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Text(
+                      'Daily Wholesale Price',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
         actions: <Widget>[
           new IconButton(
               icon: new Icon(
@@ -42,68 +69,13 @@ class _HomePageNewState extends State<HomePageNew> {
               onPressed: () => showBottomSheetModal())
         ],
       ),
-      body: Builder(builder: (BuildContext context) {
-        return Column(
-          children: [
-            NativeAdmob(
-              // Your ad unit id
-              adUnitID: bannerAdID,
-              type: NativeAdmobType.full,
-            ),
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    child: WebView(
-                      initialUrl: url,
-                      javascriptMode: JavascriptMode.unrestricted,
-                      onWebViewCreated: (WebViewController webViewController) {
-                        _controller.complete(webViewController);
-                      },
-                      onPageStarted: (String url) {
-                        print('Page started loading: $url');
-                      },
-                      onPageFinished: (String url) {
-                        if (!hasError) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                      },
-                      onWebResourceError: (WebResourceError error) {
-                        print(error);
-                        setState(() {
-                          isLoading = false;
-                          hasError = true;
-                        });
-                      },
-                      gestureNavigationEnabled: true,
-                    ),
-                  ),
-                  isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : hasError
-                          ? Container(
-                              color: Colors.grey,
-                              child: Center(
-                                child: RaisedButton(
-                                  onPressed: () => SystemNavigator.pop(),
-                                  child: Text(
-                                    'No Internet Connection',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  color: Colors.redAccent,
-                                ),
-                              ))
-                          : Container(),
-                ],
-              ),
-            )
-          ],
-        );
-      }),
+      body: TabbarContent(
+        controller: controller,
+        children: <Widget>[
+          NepaliVegPrice(),
+          EnglishWebViewNew(),
+        ],
+      ),
     );
   }
 
