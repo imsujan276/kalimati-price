@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:http/http.dart' as http;
@@ -94,7 +95,18 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
                           )),
                     );
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    return Container(
+                        color: Colors.grey,
+                        child: Center(
+                          child: RaisedButton(
+                            onPressed: () => SystemNavigator.pop(),
+                            child: Text(
+                              'No Internet Connection',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            color: Colors.redAccent,
+                          ),
+                        ));
                   }
 
                   // By default, show a loading spinner.
