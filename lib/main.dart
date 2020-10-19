@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-// import 'package:kalimati_price/pages/home_page.dart';
 import 'package:kalimati_price/pages/home_page_new.dart';
 
-void main(){
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_admob/native_admob_controller.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -12,7 +10,6 @@ class NepaliVegPrice extends StatefulWidget {
 }
 
 class _NepaliVegPriceState extends State<NepaliVegPrice> {
-  static const bannerAdID = "ca-app-pub-9000154121468885/3888822435";
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
@@ -20,43 +17,12 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
   bool hasError = false;
   var url = 'https://kalimatimarket.gov.np/priceinfo/dlypricebulletin';
 
-  final _nativeAdController = NativeAdmobController();
-  double _admobHeight = 0;
-
-  StreamSubscription _subscription;
-
   Future<dynamic> nepaliData;
 
   @override
   void initState() {
-    _subscription = _nativeAdController.stateChanged.listen(_onStateChanged);
     nepaliData = fetchData();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    _nativeAdController.dispose();
-    super.dispose();
-  }
-
-  void _onStateChanged(AdLoadState state) {
-    switch (state) {
-      case AdLoadState.loading:
-        setState(() {
-          _admobHeight = 0;
-        });
-        break;
-
-      case AdLoadState.loadCompleted:
-        setState(() {
-          _admobHeight = 75;
-        });
-        break;
-      default:
-        break;
-    }
   }
 
   Future<dynamic> fetchData() async {
@@ -115,14 +81,8 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
               )),
             ),
             SizedBox(
-                height: _admobHeight,
-                child: NativeAdmob(
-                  adUnitID: bannerAdID,
-                  loading: Container(),
-                  controller: _nativeAdController,
-                  type: NativeAdmobType.full,
-                  // error: Text("Failed to load the ad"),
-                )),
+              height: 65.0,
+            ),
           ],
         );
       }),

@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:kalimati_price/pages/english_web_view.dart';
 import 'package:kalimati_price/pages/nepali_page.dart';
@@ -13,12 +14,41 @@ class HomePageNew extends StatefulWidget {
 class _HomePageNewState extends State<HomePageNew>
     with SingleTickerProviderStateMixin {
   final controller = PageController();
-
   bool showEnglishVersion = false;
+
+  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    testDevices: null,
+    keywords: <String>[
+      'nepal',
+      'vegetables',
+      'kalimati',
+      'price',
+      'finance news'
+    ],
+    childDirected: false,
+    nonPersonalizedAds: true,
+  );
+  // ignore: unused_field
+  BannerAd _bannerAd;
+  BannerAd createBannerAd() {
+    return BannerAd(
+      adUnitId: 'ca-app-pub-9000154121468885/3888822435',
+      size: AdSize.smartBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("BannerAd event => $event");
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-9000154121468885~7244024653');
+    _bannerAd = createBannerAd()
+      ..load()
+      ..show();
     SharedPreferences.getInstance().then((SharedPreferences sp) {
       showEnglishVersion = sp.getBool('showEnglishVersion') ?? false;
       setState(() {});
