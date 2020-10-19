@@ -82,7 +82,7 @@ class _EnglishWebViewNewState extends State<EnglishWebViewNew> {
               ),
             ),
             SizedBox(
-              height: 65.0,
+              height: 80.0,
             ),
           ],
         );
