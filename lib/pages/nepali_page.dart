@@ -81,7 +81,7 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
               )),
             ),
             SizedBox(
-              height: 75.0,
+              height: 50.0,
             ),
           ],
         );

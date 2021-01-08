@@ -37,6 +37,7 @@ class _EnglishWebViewNewState extends State<EnglishWebViewNew> {
               child: Stack(
                 children: <Widget>[
                   Container(
+                    color: Colors.green[100],
                     child: WebView(
                       initialUrl: url,
                       javascriptMode: JavascriptMode.unrestricted,
@@ -71,7 +72,7 @@ class _EnglishWebViewNewState extends State<EnglishWebViewNew> {
                                 child: RaisedButton(
                                   onPressed: () => SystemNavigator.pop(),
                                   child: Text(
-                                    'No Internet Connection',
+                                    'Error getting data',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   color: Colors.redAccent,
@@ -82,7 +83,7 @@ class _EnglishWebViewNewState extends State<EnglishWebViewNew> {
               ),
             ),
             SizedBox(
-              height: 80.0,
+              height: 50.0,
             ),
           ],
         );

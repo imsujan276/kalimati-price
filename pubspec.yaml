@@ -1,7 +1,7 @@
 name: kalimati_price
 description: A new Flutter project.
 
-version: 1.0.1+8
+version: 1.0.1+10
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -14,7 +14,7 @@ dependencies:
   rounded_modal: ^1.0.1
   flutter_launcher_icons: ^0.7.4
   webview_flutter: ^0.3.22+1
-  tabbar:
+  # tabbar:
   shared_preferences: ^0.5.12
   firebase_admob: ^0.10.0+2
 
