@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:web_scraper/web_scraper.dart';
+import 'package:html/parser.dart' show parse;
 
 class NepaliVegPrice extends StatefulWidget {
   @override
@@ -12,12 +13,13 @@ class NepaliVegPrice extends StatefulWidget {
 class _NepaliVegPriceState extends State<NepaliVegPrice> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+  WebViewController _myController;
 
   bool isLoading = true;
   bool hasError = false;
-  var url = 'https://kalimatimarket.gov.np/priceinfo/dlypricebulletin';
 
   Future<dynamic> nepaliData;
+  final webScraper = WebScraper('https://kalimatimarket.gov.np');
 
   @override
   void initState() {
@@ -26,13 +28,12 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
   }
 
   Future<dynamic> fetchData() async {
-    final response =
-        await http.post(url, body: {'cdate': '', 'pricetype': 'W'});
-    if (response.statusCode == 200) {
-      return "data:text/html;charset=utf-8," +
-          Uri.encodeComponent(response.body);
-    } else {
-      throw Exception('Unable to fetch nepali price');
+    if (await webScraper.loadWebPage('')) {
+      String pageContent = webScraper.getPageContent();
+      var document = parse(pageContent);
+      var table =
+          document.querySelector("div > #commodityPricesDailyTable").outerHtml;
+      return "data:text/html;charset=utf-8," + Uri.encodeComponent(table);
     }
   }
 
@@ -40,16 +41,17 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        return Column(
-          children: [
-            Expanded(
-              child: Center(
-                  child: FutureBuilder<dynamic>(
-                future: nepaliData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                      child: Padding(
+        return Container(
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                    child: FutureBuilder<dynamic>(
+                  future: nepaliData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        child: Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: WebView(
                             initialUrl: snapshot.data,
@@ -57,33 +59,39 @@ class _NepaliVegPriceState extends State<NepaliVegPrice> {
                             onWebViewCreated:
                                 (WebViewController webViewController) {
                               _controller.complete(webViewController);
+                              _myController = webViewController;
                             },
-                          )),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Container(
-                        color: Colors.grey,
-                        child: Center(
-                          child: RaisedButton(
-                            onPressed: () => SystemNavigator.pop(),
-                            child: Text(
-                              'No Internet Connection',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: Colors.redAccent,
+                            onPageFinished: (String url) {
+                              _myController.evaluateJavascript(
+                                  "document.getElementsByClassName(\"features-inner\")[0].style.backgroundColor='#ffffff';");
+                            },
                           ),
-                        ));
-                  }
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Container(
+                          color: Colors.grey,
+                          child: Center(
+                            child: ElevatedButton(
+                              onPressed: () => SystemNavigator.pop(),
+                              child: Text(
+                                'Error Getting Data. Exit',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ));
+                    }
 
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator();
-                },
-              )),
-            ),
-            SizedBox(
-              height: 50.0,
-            ),
-          ],
+                    // By default, show a loading spinner.
+                    return CircularProgressIndicator();
+                  },
+                )),
+              ),
+              SizedBox(
+                height: 50.0,
+              ),
+            ],
+          ),
         );
       }),
     );

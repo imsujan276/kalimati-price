@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kalimati_price/pages/home_page.dart';
+import 'package:kalimati_price/pages/home_page_new.dart';
 // import 'package:kalimati_price/pages/home_page_new.dart';
 
 void main() {
@@ -15,8 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
-      // home: HomePageNew(),
+      // home: HomePage(),
+      home: HomePageNew(),
       debugShowCheckedModeBanner: false,
     );
   }

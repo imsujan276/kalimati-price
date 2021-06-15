@@ -1,6 +1,7 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:kalimati_price/pages/english_web_view.dart';
+import 'package:kalimati_price/pages/nepali_page.dart';
 // import 'package:kalimati_price/pages/nepali_page.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,7 +71,8 @@ class _HomePageState extends State<HomePage>
               onPressed: () => showBottomSheetModal()),
         ],
       ),
-      body: EnglishWebViewNew(),
+      body: NepaliVegPrice(),
+      // body: EnglishWebViewNew(),
     );
   }
 
