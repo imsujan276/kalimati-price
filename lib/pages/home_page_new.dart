@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kalimati_price/pages/english_web_view.dart';
 import 'package:kalimati_price/pages/nepali_page.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePageNew extends StatefulWidget {
   @override
@@ -15,6 +19,8 @@ class _HomePageNewState extends State<HomePageNew>
     with SingleTickerProviderStateMixin {
   final controller = PageController();
   bool showEnglishVersion = false;
+
+  String appPackageName = "com.suga.kalimati_price";
 
   static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     testDevices: null,
@@ -41,6 +47,23 @@ class _HomePageNewState extends State<HomePageNew>
     );
   }
 
+  InterstitialAd interstitialAd;
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: "ca-app-pub-9000154121468885/8763650251",
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print('InterstitialAd event $event');
+      },
+    );
+  }
+
+  void loadInterstitialAd() {
+    interstitialAd = createInterstitialAd()
+      ..load()
+      ..show();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +76,14 @@ class _HomePageNewState extends State<HomePageNew>
       showEnglishVersion = sp.getBool('showEnglishVersion') ?? false;
       setState(() {});
     });
+    Timer(Duration(seconds: 5), () => loadInterstitialAd());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd?.dispose();
+    interstitialAd?.dispose();
   }
 
   @override
@@ -146,7 +177,7 @@ class _HomePageNewState extends State<HomePageNew>
           padding: EdgeInsets.all(20.0),
           child: Column(
             children: <Widget>[
-              Text('Language Preference',
+              Text('Settings',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500,
@@ -155,7 +186,8 @@ class _HomePageNewState extends State<HomePageNew>
                 height: 10.0,
               ),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CheckboxListTile(
                     title: Text("Show English Version"),
@@ -168,9 +200,32 @@ class _HomePageNewState extends State<HomePageNew>
                         });
                         sp.setBool('showEnglishVersion', newValue);
                         Navigator.pop(context);
+                        Timer(Duration(seconds: 5), () => loadInterstitialAd());
                       });
                     },
-                  )
+                  ),
+                  ListTile(
+                    onTap: () {
+                      try {
+                        launch("market://details?id=" + appPackageName);
+                      } on PlatformException catch (e) {
+                        print(e);
+                        launch(
+                            "https://play.google.com/store/apps/details?id=" +
+                                appPackageName);
+                      } finally {
+                        launch(
+                            "https://play.google.com/store/apps/details?id=" +
+                                appPackageName);
+                      }
+                    },
+                    title: Text(
+                      "Rate the APP",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

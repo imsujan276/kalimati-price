@@ -7,7 +7,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = [];
       json['result'].forEach((v) {
         result.add(new Result.fromJson(v));
       });
@@ -60,13 +60,13 @@ class Result {
     id = json['id'];
     commodityName = json['commodityName'];
     if (json['retailPrice'] != null) {
-      retailPrice = new List<RetailPrice>();
+      retailPrice = [];
       json['retailPrice'].forEach((v) {
         retailPrice.add(new RetailPrice.fromJson(v));
       });
     }
     if (json['wholesalePrice'] != null) {
-      wholesalePrice = new List<WholesalePrice>();
+      wholesalePrice = [];
       json['wholesalePrice'].forEach((v) {
         wholesalePrice.add(new WholesalePrice.fromJson(v));
       });
@@ -115,7 +115,6 @@ class RetailPrice {
     return data;
   }
 }
-
 
 class WholesalePrice {
   String unit;
