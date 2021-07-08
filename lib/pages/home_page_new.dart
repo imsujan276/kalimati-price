@@ -76,7 +76,6 @@ class _HomePageNewState extends State<HomePageNew>
       showEnglishVersion = sp.getBool('showEnglishVersion') ?? false;
       setState(() {});
     });
-    Timer(Duration(seconds: 5), () => loadInterstitialAd());
   }
 
   @override
@@ -200,7 +199,7 @@ class _HomePageNewState extends State<HomePageNew>
                         });
                         sp.setBool('showEnglishVersion', newValue);
                         Navigator.pop(context);
-                        Timer(Duration(seconds: 5), () => loadInterstitialAd());
+                        Timer(Duration(seconds: 2), () => loadInterstitialAd());
                       });
                     },
                   ),
